@@ -1,5 +1,5 @@
-import Script from 'next/script';
 import './globals.css';
+import KakaoInitializer from './lib/KakaoInitializer';
 
 export const metadata = {
   title: '청첩장',
@@ -38,10 +38,7 @@ export default function RootLayout({ children }) {
     <html lang="ko">
       <body>
         <div className="page">{children}</div>
-        <Script
-          src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.4/kakao.min.js"
-          strategy="afterInteractive"
-        />
+        <KakaoInitializer />
       </body>
     </html>
   );

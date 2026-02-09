@@ -112,7 +112,6 @@ export default function Home() {
   const [copiedId, setCopiedId] = useState('');
   const [activeAccountGroup, setActiveAccountGroup] = useState(null);
   const [isAttendanceOpen, setIsAttendanceOpen] = useState(false);
-  const kakaoJsKey = process.env.NEXT_PUBLIC_KAKAO_JS_KEY;
 
   const eventDateTime = useMemo(() => new Date(`${EVENT.date}T${EVENT.time24}:00`), []);
   const eventDateText = useMemo(() => formatEventDateOnly(eventDateTime), [eventDateTime]);
@@ -156,14 +155,6 @@ export default function Home() {
       cancelled = true;
     };
   }, []);
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    if (!window.Kakao || !kakaoJsKey) return;
-    if (!window.Kakao.isInitialized()) {
-      window.Kakao.init(kakaoJsKey);
-    }
-  }, [kakaoJsKey]);
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -341,22 +332,7 @@ export default function Home() {
   };
 
   const handleKakaoShare = async () => {
-    if (typeof window === 'undefined') return;
-    const kakao = window.Kakao;
-    if (!kakao || !kakao.isInitialized()) {
-      if (navigator.share) {
-        await navigator.share({
-          title: '정상영 & 이승미 결혼식에 초대합니다',
-          text: '2026년 5월 9일 토요일 오후 2시 40분\nKU컨벤션웨딩홀',
-          url: SHARE_URL,
-        });
-        return;
-      }
-      await handleCopy(SHARE_URL, 'share-link');
-      return;
-    }
-
-    kakao.Share.sendDefault({
+    window.Kakao.Share.sendDefault({
       objectType: 'feed',
       content: {
         title: '정상영 & 이승미 결혼식에 초대합니다',
