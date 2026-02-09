@@ -581,32 +581,30 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="section">
-        <div className="section section-center">
-          <p className="location-eyebrow">ACCOUNT</p>
-          <h2 className="location-title">마음 전하실 곳</h2>
-          <div className="account-button-row">
-            <button
-              className="account-button"
-              type="button"
-              onClick={() => setActiveAccountGroup('groom')}
-            >
-              신랑측
-            </button>
-            <button
-              className="account-button"
-              type="button"
-              onClick={() => setActiveAccountGroup('bride')}
-            >
-              신부측
-            </button>
-          </div>
-          <p className="account-desc">
-            화환은 정중히 사양합니다.
-            <br />
-            축하의 마음만 감사히 받겠습니다.
-          </p>
+      <section className="section section-center">
+        <p className="location-eyebrow">ACCOUNT</p>
+        <h2 className="location-title">마음 전하실 곳</h2>
+        <div className="account-button-row">
+          <button
+            className="account-button"
+            type="button"
+            onClick={() => setActiveAccountGroup('groom')}
+          >
+            신랑측
+          </button>
+          <button
+            className="account-button"
+            type="button"
+            onClick={() => setActiveAccountGroup('bride')}
+          >
+            신부측
+          </button>
         </div>
+        <p className="account-desc">
+          화환은 정중히 사양합니다.
+          <br />
+          축하의 마음만 감사히 받겠습니다.
+        </p>
       </section>
 
       <section className="section section-center share-section">
