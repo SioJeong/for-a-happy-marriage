@@ -447,8 +447,19 @@ textarea {
   width: min(92vw, 520px);
   max-height: 90vh;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+  gap: 12px;
+}
+
+.lightbox-viewport {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  touch-action: pan-y;
 }
 
 .lightbox-image {
@@ -456,9 +467,53 @@ textarea {
   height: auto;
   max-height: 90vh;
   object-fit: contain;
-  touch-action: none;
+  touch-action: pan-y;
   -webkit-user-drag: none;
   user-select: none;
+}
+
+.lightbox-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  background: rgba(0, 0, 0, 0.45);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.lightbox-nav-icon {
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+
+.lightbox-nav--prev {
+  left: 8px;
+}
+
+.lightbox-nav--next {
+  right: 8px;
+}
+
+.lightbox-nav:disabled {
+  opacity: 0.35;
+  cursor: default;
+  pointer-events: none;
+}
+
+.lightbox-counter {
+  margin: 0;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .modal-header {

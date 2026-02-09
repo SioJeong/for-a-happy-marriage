@@ -98,7 +98,7 @@ export default function Home() {
   const audioRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [activeImage, setActiveImage] = useState(null);
+  const [activeImageIndex, setActiveImageIndex] = useState(null);
   const [formState, setFormState] = useState({
     name: '',
     phone: '',
@@ -112,6 +112,7 @@ export default function Home() {
   const [copiedId, setCopiedId] = useState('');
   const [activeAccountGroup, setActiveAccountGroup] = useState(null);
   const [isAttendanceOpen, setIsAttendanceOpen] = useState(false);
+  const lightboxTouchStartRef = useRef(null);
 
   const eventDateTime = useMemo(() => new Date(`${EVENT.date}T${EVENT.time24}:00`), []);
   const eventDateText = useMemo(() => formatEventDateOnly(eventDateTime), [eventDateTime]);
@@ -127,6 +128,9 @@ export default function Home() {
 
     return Boolean(name && phone && side && attendance && isGuestsValid);
   }, [formState]);
+
+  const activeImage = activeImageIndex !== null ? galleryImages[activeImageIndex] : null;
+  const totalGalleryImages = galleryImages.length;
 
   const isAnyModalOpen = Boolean(isOpen || activeAccountGroup || activeImage);
 
@@ -323,6 +327,60 @@ export default function Home() {
     setIsAttendanceOpen(false);
   };
 
+  const handleOpenImage = (index) => {
+    setActiveImageIndex(index);
+  };
+
+  const handleCloseImage = () => {
+    setActiveImageIndex(null);
+    lightboxTouchStartRef.current = null;
+  };
+
+  const handlePrevImage = () => {
+    setActiveImageIndex((prev) => {
+      if (prev === null) return prev;
+      return prev > 0 ? prev - 1 : prev;
+    });
+  };
+
+  const handleNextImage = () => {
+    setActiveImageIndex((prev) => {
+      if (prev === null) return prev;
+      return prev < totalGalleryImages - 1 ? prev + 1 : prev;
+    });
+  };
+
+  const handleLightboxTouchStart = (event) => {
+    const touch = event.touches[0];
+    if (!touch) return;
+    lightboxTouchStartRef.current = {
+      x: touch.clientX,
+      y: touch.clientY,
+    };
+  };
+
+  const handleLightboxTouchEnd = (event) => {
+    if (activeImageIndex === null) return;
+    const touch = event.changedTouches[0];
+    const start = lightboxTouchStartRef.current;
+    if (!touch || !start) return;
+
+    const deltaX = touch.clientX - start.x;
+    const deltaY = touch.clientY - start.y;
+    lightboxTouchStartRef.current = null;
+
+    if (Math.abs(deltaX) < 40 || Math.abs(deltaX) < Math.abs(deltaY)) {
+      return;
+    }
+
+    if (deltaX > 0) {
+      handlePrevImage();
+      return;
+    }
+
+    handleNextImage();
+  };
+
   const handleAttendanceSelect = (option) => {
     setFormState((prev) => ({
       ...prev,
@@ -446,12 +504,12 @@ export default function Home() {
       <section className="section">
         <p className="eyebrow">GALLERY</p>
         <div className="gallery-grid">
-          {galleryImages.map((image) => (
+          {galleryImages.map((image, index) => (
             <button
               key={image.id}
               className="gallery-item"
               type="button"
-              onClick={() => setActiveImage(image)}
+              onClick={() => handleOpenImage(index)}
               aria-label={`${image.alt} 확대 보기`}
             >
               <Image
@@ -776,20 +834,75 @@ export default function Home() {
           className="lightbox-backdrop"
           role="dialog"
           aria-modal="true"
-          onClick={() => setActiveImage(null)}
+          onClick={handleCloseImage}
         >
           <div className="lightbox" onClick={(event) => event.stopPropagation()}>
-            <button className="close-button" type="button" onClick={() => setActiveImage(null)}>
+            <button className="close-button" type="button" onClick={handleCloseImage}>
               닫기
             </button>
-            <Image
-              className="lightbox-image"
-              src={activeImage.src}
-              alt={activeImage.alt}
-              width={4000}
-              height={6000}
-              sizes="(min-width: 768px) 520px, 92vw"
-            />
+            <div
+              className="lightbox-viewport"
+              onTouchStart={handleLightboxTouchStart}
+              onTouchEnd={handleLightboxTouchEnd}
+            >
+              <button
+                className="lightbox-nav lightbox-nav--prev"
+                type="button"
+                onClick={handlePrevImage}
+                disabled={activeImageIndex === 0}
+                aria-label="이전 사진"
+              >
+                <svg
+                  className="lightbox-nav-icon"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                  focusable="false"
+                >
+                  <path
+                    d="M15.75 5.25L9 12l6.75 6.75"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </button>
+              <Image
+                className="lightbox-image"
+                src={activeImage.src}
+                alt={activeImage.alt}
+                width={4000}
+                height={6000}
+                sizes="(min-width: 768px) 520px, 92vw"
+              />
+              <button
+                className="lightbox-nav lightbox-nav--next"
+                type="button"
+                onClick={handleNextImage}
+                disabled={activeImageIndex === totalGalleryImages - 1}
+                aria-label="다음 사진"
+              >
+                <svg
+                  className="lightbox-nav-icon"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                  focusable="false"
+                >
+                  <path
+                    d="M8.25 5.25L15 12l-6.75 6.75"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </button>
+            </div>
+            <p className="lightbox-counter" aria-live="polite">
+              {activeImageIndex + 1} / {totalGalleryImages}
+            </p>
           </div>
         </div>
       )}
