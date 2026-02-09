@@ -109,10 +109,18 @@ export default function Home() {
   const [copiedId, setCopiedId] = useState('');
   const [activeAccountGroup, setActiveAccountGroup] = useState(null);
   const [isAttendanceOpen, setIsAttendanceOpen] = useState(false);
+  const kakaoJsKey = process.env.NEXT_PUBLIC_KAKAO_JS_KEY;
 
   const eventDateTime = useMemo(() => new Date(`${EVENT.date}T${EVENT.time24}:00`), []);
   const eventDateText = useMemo(() => formatEventDateOnly(eventDateTime), [eventDateTime]);
   const eventSummary = useMemo(() => `${eventDateText} ${EVENT.time}`, [eventDateText]);
+  const shareUrl = useMemo(() => {
+    if (typeof window !== 'undefined' && window.location?.href) {
+      return window.location.href;
+    }
+    return 'https://for-a-happy-marriage.vercel.app';
+  }, []);
+  const shareImageUrl = useMemo(() => 'https://for-a-happy-marriage.vercel.app/photos/0.jpg', []);
 
   const isFormValid = useMemo(() => {
     const name = formState.name.trim();
@@ -152,6 +160,14 @@ export default function Home() {
       cancelled = true;
     };
   }, []);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    if (!window.Kakao || !kakaoJsKey) return;
+    if (!window.Kakao.isInitialized()) {
+      window.Kakao.init(kakaoJsKey);
+    }
+  }, [kakaoJsKey]);
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -326,6 +342,45 @@ export default function Home() {
       attendance: option,
     }));
     setIsAttendanceOpen(false);
+  };
+
+  const handleKakaoShare = async () => {
+    if (typeof window === 'undefined') return;
+    const kakao = window.Kakao;
+    if (!kakao || !kakao.isInitialized()) {
+      if (navigator.share) {
+        await navigator.share({
+          title: '정상영 & 이승미 결혼식에 초대합니다',
+          text: '2026년 5월 9일 토요일 오후 2시 40분 \n KU컨벤션웨딩홀',
+          url: shareUrl,
+        });
+        return;
+      }
+      await handleCopy(shareUrl, 'share-link');
+      return;
+    }
+
+    kakao.Share.sendDefault({
+      objectType: 'feed',
+      content: {
+        title: '정상영 & 이승미 결혼식에 초대합니다',
+        description: '2026년 5월 9일 토요일 오후 2시 40분 \n KU컨벤션웨딩홀',
+        imageUrl: shareImageUrl,
+        link: {
+          mobileWebUrl: shareUrl,
+          webUrl: shareUrl,
+        },
+      },
+      buttons: [
+        {
+          title: '청첩장 보기',
+          link: {
+            mobileWebUrl: shareUrl,
+            webUrl: shareUrl,
+          },
+        },
+      ],
+    });
   };
 
   return (
@@ -551,6 +606,27 @@ export default function Home() {
             <br />
             축하의 마음만 감사히 받겠습니다.
           </p>
+        </div>
+      </section>
+
+      <section className="section section-center share-section">
+        <p className="eyebrow">SHARE</p>
+        <h2 className="location-title">청첩장 전달하기</h2>
+        <p className="section-text">
+          청첩장을 간편하게 전달해보세요.
+        </p>
+        <br />
+        <div className="share-button-row">
+          <button className="share-button" type="button" onClick={handleKakaoShare}>
+            카카오톡으로 전달하기
+          </button>
+          <button
+            className="share-button"
+            type="button"
+            onClick={() => handleCopy(shareUrl, 'share-link')}
+          >
+            {copiedId === 'share-link' ? '복사됨' : 'URL 복사하기'}
+          </button>
         </div>
       </section>
 
