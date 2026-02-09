@@ -22,6 +22,9 @@ const galleryImages = Array.from({ length: 9 }, (_, index) => ({
   alt: `갤러리 이미지 ${index + 1}`,
 }));
 
+const SHARE_URL = 'https://for-a-happy-marriage.vercel.app';
+const SHARE_IMAGE_URL = 'https://for-a-happy-marriage.vercel.app/photos/0.jpg';
+
 const accountGroups = {
   groom: {
     title: '신랑측',
@@ -114,8 +117,6 @@ export default function Home() {
   const eventDateTime = useMemo(() => new Date(`${EVENT.date}T${EVENT.time24}:00`), []);
   const eventDateText = useMemo(() => formatEventDateOnly(eventDateTime), [eventDateTime]);
   const eventSummary = useMemo(() => `${eventDateText} ${EVENT.time}`, [eventDateText]);
-  const shareUrl = useMemo(() => 'https://for-a-happy-marriage.vercel.app',[]);
-  const shareImageUrl = useMemo(() => 'https://for-a-happy-marriage.vercel.app/photos/0.jpg', []);
 
   const isFormValid = useMemo(() => {
     const name = formState.name.trim();
@@ -347,11 +348,11 @@ export default function Home() {
         await navigator.share({
           title: '정상영 & 이승미 결혼식에 초대합니다',
           text: '2026년 5월 9일 토요일 오후 2시 40분 \n KU컨벤션웨딩홀',
-          url: shareUrl,
+          url: SHARE_URL,
         });
         return;
       }
-      await handleCopy(shareUrl, 'share-link');
+      await handleCopy(SHARE_URL, 'share-link');
       return;
     }
 
@@ -360,18 +361,18 @@ export default function Home() {
       content: {
         title: '정상영 & 이승미 결혼식에 초대합니다',
         description: '2026년 5월 9일 토요일 오후 2시 40분 \n KU컨벤션웨딩홀',
-        imageUrl: shareImageUrl,
+        imageUrl: SHARE_IMAGE_URL,
         link: {
-          mobileWebUrl: shareUrl,
-          webUrl: shareUrl,
+          mobileWebUrl: SHARE_URL,
+          webUrl: SHARE_URL,
         },
       },
       buttons: [
         {
           title: '청첩장 보기',
           link: {
-            mobileWebUrl: shareUrl,
-            webUrl: shareUrl,
+            mobileWebUrl: SHARE_URL,
+            webUrl: SHARE_URL,
           },
         },
       ],
@@ -616,7 +617,7 @@ export default function Home() {
           <button
             className="share-button"
             type="button"
-            onClick={() => handleCopy(shareUrl, 'share-link')}
+            onClick={() => handleCopy(SHARE_URL, 'share-link')}
           >
             {copiedId === 'share-link' ? '복사됨' : 'URL 복사하기'}
           </button>
