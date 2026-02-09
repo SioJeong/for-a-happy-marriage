@@ -114,12 +114,7 @@ export default function Home() {
   const eventDateTime = useMemo(() => new Date(`${EVENT.date}T${EVENT.time24}:00`), []);
   const eventDateText = useMemo(() => formatEventDateOnly(eventDateTime), [eventDateTime]);
   const eventSummary = useMemo(() => `${eventDateText} ${EVENT.time}`, [eventDateText]);
-  const shareUrl = useMemo(() => {
-    if (typeof window !== 'undefined' && window.location?.href) {
-      return window.location.href;
-    }
-    return 'https://for-a-happy-marriage.vercel.app';
-  }, []);
+  const shareUrl = useMemo(() => 'https://for-a-happy-marriage.vercel.app',[]);
   const shareImageUrl = useMemo(() => 'https://for-a-happy-marriage.vercel.app/photos/0.jpg', []);
 
   const isFormValid = useMemo(() => {
@@ -607,7 +602,7 @@ export default function Home() {
         </p>
       </section>
 
-      <section className="section section-center share-section">
+      <section className="section section-center">
         <p className="eyebrow">SHARE</p>
         <h2 className="location-title">청첩장 전달하기</h2>
         <p className="section-text">
