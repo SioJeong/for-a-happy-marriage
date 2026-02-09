@@ -347,7 +347,7 @@ export default function Home() {
       if (navigator.share) {
         await navigator.share({
           title: '정상영 & 이승미 결혼식에 초대합니다',
-          text: '2026년 5월 9일 토요일 오후 2시 40분 \n KU컨벤션웨딩홀',
+          text: '2026년 5월 9일 토요일 오후 2시 40분\nKU컨벤션웨딩홀',
           url: SHARE_URL,
         });
         return;
@@ -360,7 +360,7 @@ export default function Home() {
       objectType: 'feed',
       content: {
         title: '정상영 & 이승미 결혼식에 초대합니다',
-        description: '2026년 5월 9일 토요일 오후 2시 40분 \n KU컨벤션웨딩홀',
+        description: '2026년 5월 9일 토요일 오후 2시 40분\nKU컨벤션웨딩홀',
         imageUrl: SHARE_IMAGE_URL,
         link: {
           mobileWebUrl: SHARE_URL,
