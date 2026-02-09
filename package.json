@@ -1,0 +1,32 @@
+{
+  "name": "for-a-happy-marriage",
+  "version": "1.0.0",
+  "description": "The only thing I can do for a wedding as a developer",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SioJeong/for-a-happy-marriage.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SioJeong/for-a-happy-marriage/issues"
+  },
+  "homepage": "https://github.com/SioJeong/for-a-happy-marriage#readme",
+  "dependencies": {
+    "next": "^16.1.6",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4"
+  },
+  "devDependencies": {
+    "prettier": "^3.8.1"
+  }
+}
